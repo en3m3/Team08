@@ -1,7 +1,12 @@
 This is some text.
 this is more text.
-this is edited.
-And another.
+
+
+Seeing if i can add text from intelliJ
+blah blah blah
+
+
+
 
 I made a change.
 Second try
