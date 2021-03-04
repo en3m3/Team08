@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 
 public class GameView extends View {
-    private Bird bird;
+    private Chopper chopper;
     private Handler handler;
     private Runnable r;
     private  ArrayList<Pipe> arrPipes;
@@ -32,7 +32,7 @@ public class GameView extends View {
         }
         start = false;
         score = 0;
-        initBird();
+        initChopper();
         initPipe();
         handler = new Handler();
         r = new Runnable() {
@@ -44,7 +44,8 @@ public class GameView extends View {
     }
 
     private void initPipe() {
-        sumpipe = 6;
+//        sumpipe = 6;
+        sumpipe = 0;
         distance = 300 *Constants.SCREEN_HEIGHT/1920;
         arrPipes = new ArrayList<>();
         for (int i = 0; i < sumpipe; i++) {
@@ -61,24 +62,24 @@ public class GameView extends View {
         }
     }
 
-    private void initBird() {
-        bird = new Bird();
-        bird.setWidth(100*Constants.SCREEN_WIDTH/1000);
-        bird.setHeight(100*Constants.SCREEN_HEIGHT/1980);
-        bird.setX(100*Constants.SCREEN_WIDTH/1080);
-        bird.setY(Constants.SCREEN_HEIGHT/2-bird.getHeight()/2);
+    private void initChopper() {
+        chopper = new Chopper();
+        chopper.setWidth(100*Constants.SCREEN_WIDTH/1000);
+        chopper.setHeight(100*Constants.SCREEN_HEIGHT/1980);
+        chopper.setX(100*Constants.SCREEN_WIDTH/1080);
+        chopper.setY(Constants.SCREEN_HEIGHT/2-chopper.getHeight()/2);
         ArrayList<Bitmap> arrBms = new ArrayList<>();
-        arrBms.add(BitmapFactory.decodeResource(this.getResources(), R.drawable.bird1));
-        arrBms.add(BitmapFactory.decodeResource(this.getResources(), R.drawable.bird2));
-        bird.setArrBms(arrBms);
+        arrBms.add(BitmapFactory.decodeResource(this.getResources(), R.drawable.copter1));
+        arrBms.add(BitmapFactory.decodeResource(this.getResources(), R.drawable.copter2));
+        chopper.setArrBms(arrBms);
     }
 
     public void draw(Canvas canvas){
         super.draw(canvas);
         if(start) {
-            bird.draw(canvas);
+            chopper.draw(canvas);
             for(int i = 0; i < sumpipe; i++) {
-                if(bird.getRect().intersect(arrPipes.get(i).getRect()) || bird.getY()-bird.getHeight()<0 || bird.getY() > Constants.SCREEN_HEIGHT){
+                if(chopper.getRect().intersect(arrPipes.get(i).getRect()) || chopper.getY()-chopper.getHeight()<0 || chopper.getY() > Constants.SCREEN_HEIGHT){
                     Pipe.speed = 0;
                     MainActivity.txt_score_over.setText(MainActivity.txt_score.getText());
                     MainActivity.txt_best_score.setText("best: "+ bestscore);
@@ -86,8 +87,8 @@ public class GameView extends View {
                     MainActivity.rl_game_over.setVisibility(VISIBLE);
 
                 }
-                if(this.bird.getX()+this.bird.getWidth()>arrPipes.get(i).getX()+arrPipes.get(i).getWidth()/2
-                        && this.bird.getX()+this.bird.getWidth()<=arrPipes.get(i).getX()+arrPipes.get(i).getWidth()/2 + Pipe.speed
+                if(this.chopper.getX()+this.chopper.getWidth()>arrPipes.get(i).getX()+arrPipes.get(i).getWidth()/2
+                        && this.chopper.getX()+this.chopper.getWidth()<=arrPipes.get(i).getX()+arrPipes.get(i).getWidth()/2 + Pipe.speed
                         && i<sumpipe/2){
                     score++;
                     if(score > bestscore) {
@@ -112,10 +113,10 @@ public class GameView extends View {
                 this.arrPipes.get(i).draw(canvas);
             }
         } else {
-            if(bird.getY()>Constants.SCREEN_HEIGHT/2){
-                bird.setDrop(-15*Constants.SCREEN_HEIGHT/1920);
+            if(chopper.getY()>Constants.SCREEN_HEIGHT/2){
+                chopper.setDrop(-15*Constants.SCREEN_HEIGHT/1920);
             }
-            bird.draw(canvas);
+            chopper.draw(canvas);
         }
         // update every 0.01 seconds
         handler.postDelayed(r, 10);
@@ -125,7 +126,7 @@ public class GameView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if(event.getAction() == MotionEvent.ACTION_DOWN){
-            bird.setDrop(-15);
+            chopper.setDrop(-3);
         }
         return true;
     }
@@ -142,6 +143,6 @@ public class GameView extends View {
         MainActivity.txt_score.setText("0");
         score = 0;
         initPipe();
-        initBird();
+        initChopper();
     }
 }
