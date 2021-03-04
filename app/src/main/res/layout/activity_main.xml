@@ -25,48 +25,44 @@
         android:layout_centerInParent="true"
         android:background="#ffffff"
         android:textColor="#000000" />
-
     <RelativeLayout
         android:id="@+id/rl_game_over"
+        android:visibility="invisible"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="invisible">
-
+        android:layout_height="match_parent">
         <TextView
-            android:id="@+id/txt_game_over"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="game over"
-            android:textColor="#ff00"
-            android:textSize="50dp" />
-
+        android:id="@+id/txt_game_over"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="game over"
+        android:textSize="50dp"
+        android:textColor="#ff00"/>
         <TextView
-            android:id="@+id/txt_score_over"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:text="0"
-            android:textColor="#ff00"
-            android:textSize="100sp" />
-
+        android:id="@+id/txt_score_over"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textSize="100sp"
+        android:textColor="#ff00"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"/>
         <TextView
-            android:id="@+id/highScore"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_score_over"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
-            android:text="best: 0" />
-
+        android:id="@+id/txt_best_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="best: 0"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/txt_score_over"
+        android:layout_marginTop="20dp"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_game_over"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
             android:text="Touch screen to continue"
-            android:textColor="#ff5722"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/txt_game_over"
+            android:layout_marginTop="20dp"
+            android:textColor="#ff5722"/>
     </RelativeLayout>
 </RelativeLayout>

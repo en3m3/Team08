@@ -23,9 +23,9 @@ public class MainActivity extends AppCompatActivity {
         this.getWindowManager().getDefaultDisplay().getMetrics(dm);
         Constants.SCREEN_WIDTH = dm.widthPixels;
         Constants.SCREEN_HEIGHT = dm.heightPixels;
-        setContentView(R.layout.activity_start);
+        setContentView(R.layout.activity_main);
         txt_score = findViewById(R.id.txt_score);
-        txt_best_score = findViewById(R.id.highScore);
+        txt_best_score = findViewById(R.id.txt_best_score);
         txt_score_over = findViewById(R.id.txt_score_over);
         rl_game_over = findViewById(R.id.rl_game_over);
         btn_start = findViewById(R.id.btn_start);
