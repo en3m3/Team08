@@ -3,6 +3,7 @@ package com.example.tapordie;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -11,24 +12,43 @@ public class Chopper extends BaseObject {
     private int count, vFlap, idCurrentBitmap;
     private float drop;
     private int monkeyNums = 0;
+    private int yMove = 0;
+    private double speed = 5;
+    private int moveTo = 0;
+    private ChopperState state = ChopperState.NOTMOVING;
 
     public Chopper(){
         this.count = 0;
-        this.vFlap =5;
+        this.vFlap =0;
         this.idCurrentBitmap = 0;
         this.drop = 0;
     }
     public void draw(Canvas canvas) {
-        drop();
         canvas.drawBitmap(this.getBm(), this.x, this.y, null);
+    }
+
+    public void update() {
+        switch(this.state) {
+            case MOVINGUP:
+                this.y += this.speed;
+                if(this.y > this.moveTo) {this.state=ChopperState.NOTMOVING;}
+                break;
+            case MOVINGDOWN:
+                this.y -= this.speed;
+                if(this.y < this.moveTo) {this.state=ChopperState.NOTMOVING;}
+                break;
+            default:
+                break;
+        }
+        Log.d("state", this.state.toString());
     }
 
     private void drop() {
 //        this.drop += 0.6;
-        this.drop += (monkeyNums)*0.3;
-        this.drop += 0.1;
-//        this.drop += 0;
-        this.y += this.drop;
+//        this.drop += (monkeyNums)*0.3;
+//        this.drop += 0.1;
+//        this.drop = 0;
+//        this.y += this.drop;
     }
 
     public float getDrop() {
@@ -66,19 +86,40 @@ public class Chopper extends BaseObject {
             }
             count =0;
         }
-        if(this.drop<0) {
-            Matrix matrix = new Matrix();
-            matrix.postRotate(-25);
-            return Bitmap.createBitmap(arrBms.get(idCurrentBitmap), 0, 0, arrBms.get(idCurrentBitmap).getWidth(), arrBms.get(idCurrentBitmap).getHeight(), matrix, true);
-        } else if(drop>=0){
-            Matrix matrix = new Matrix();
-            if(drop<70) {
-                matrix.postRotate(-25+(drop*2));
+        Matrix matrix = new Matrix();
+        if(state == ChopperState.MOVINGDOWN) {
+            if (this.y - this.moveTo < 70) {
+//                matrix.postRotate((float) (-45 + (.1* this.moveTo-this.y)));
+                matrix.postRotate(-25);
             } else {
-                matrix.postRotate(45);
+                matrix.postRotate(-25);
             }
-            return Bitmap.createBitmap(arrBms.get(idCurrentBitmap), 0, 0, arrBms.get(idCurrentBitmap).getWidth(), arrBms.get(idCurrentBitmap).getHeight(), matrix, true);
+         } else if(state == ChopperState.MOVINGUP) {
+            if (this.moveTo - this.y < 70) {
+//                matrix.postRotate((float) -.1* this.y-this.moveTo);
+                matrix.postRotate(25);
+            } else {
+                matrix.postRotate(25);
+            }
+        } else {
+            matrix.postRotate(10);
         }
-        return this.arrBms.get(idCurrentBitmap);
+            return Bitmap.createBitmap(arrBms.get(idCurrentBitmap), 0, 0, arrBms.get(idCurrentBitmap).getWidth(), arrBms.get(idCurrentBitmap).getHeight(), matrix, true);
+//        return this.arrBms.get(idCurrentBitmap);
+    }
+
+    public int getMoveTo() {
+        return this.moveTo;
+    }
+    public void setMoveTo(int yTarget) {
+        this.moveTo = yTarget;
+    }
+
+    public void setState(ChopperState newState) {
+        this.state = newState;
+    }
+
+    public ChopperState getState() {
+       return this.state;
     }
 }
