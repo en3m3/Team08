@@ -45,7 +45,7 @@ public class GameView extends View {
             }
         };
 
-//        weather = new WeatherInfo(context);
+        weather = new WeatherInfo(context);
     }
 
     private void initPipe() {

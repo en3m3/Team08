@@ -1,6 +1,7 @@
 package com.example.tapordie;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -25,17 +26,15 @@ public class WeatherInfo {
 
     public WeatherInfo(Context context) {
 //
-//        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            ActivityCompat.requestPermissions((MainActivity)context, new String[] { "location" }, 22);
-//        }
-//
-//        LocationManager locationMan = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
-//        LocationProvider provider = locationMan.getProvider(LocationManager.GPS_PROVIDER);
-//        double longitude = location.getLongitude();
-//        double latitude = location.getLatitude();
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions((Activity) context,new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
 
-//        currentLoc.setLatitude(currentLoc.getLatitude());
-//        currentLoc.setLongitude(currentLoc.getLongitude());
+        }
+
+        LocationManager locationMan = (LocationManager) context.getSystemService(context.LOCATION_SERVICE);
+        LocationProvider provider = locationMan.getProvider(LocationManager.GPS_PROVIDER);
+       currentLoc.setLatitude(currentLoc.getLatitude());
+       currentLoc.setLongitude(currentLoc.getLongitude());
 
         try {
             httpURL = new URL("https://api.openweathermap.org/data/2.5/weather?lat="+currentLoc.getLatitude()+"&lon="+currentLoc.getLongitude()+"&appid="+apikey);
