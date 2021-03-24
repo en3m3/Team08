@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.location.LocationManager;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -22,7 +23,9 @@ public class GameView extends View {
     private int sumpipe, distance;
     private int score, bestscore = 0;
     private boolean start;
+    private WeatherInfo weather;
     private Context context;
+
     public GameView (Context context, @Nullable AttributeSet attrs){
         super(context, attrs);
         this.context = context;
@@ -41,23 +44,27 @@ public class GameView extends View {
                 invalidate();
             }
         };
+
+//        weather = new WeatherInfo(context);
     }
 
     private void initPipe() {
-//        sumpipe = 6;
-        sumpipe = 0;
-        distance = 300 *Constants.SCREEN_HEIGHT/1920;
+        sumpipe = 6;
+//        sumpipe = 0;
+        distance = 350 *Constants.SCREEN_HEIGHT/1920;
         arrPipes = new ArrayList<>();
         for (int i = 0; i < sumpipe; i++) {
             if(i < sumpipe/2) {
-                this.arrPipes.add(new Pipe(Constants.SCREEN_WIDTH+i*((Constants.SCREEN_WIDTH+200*Constants.SCREEN_WIDTH/1080)/(sumpipe/2)),
-                        0, 200 * Constants.SCREEN_WIDTH/1080, Constants.SCREEN_HEIGHT/2));
-                this.arrPipes.get(this.arrPipes.size() -1).setBm(BitmapFactory.decodeResource(this.getResources(), R.drawable.pipe2));
+                this.arrPipes.add(new Pipe(Constants.SCREEN_WIDTH+i*((Constants.SCREEN_WIDTH+600*Constants.SCREEN_WIDTH/1080)/(sumpipe/2)),
+                        0, 600 * Constants.SCREEN_WIDTH/1080, Constants.SCREEN_HEIGHT/2));
+//                this.arrPipes.get(this.arrPipes.size() -1).setBm(BitmapFactory.decodeResource(this.getResources(), R.drawable.pipe2));
+                this.arrPipes.get(this.arrPipes.size() -1).setBm(BitmapFactory.decodeResource(this.getResources(), R.drawable.balloon));
                 this.arrPipes.get(this.arrPipes.size()-1).randomY();
             } else {
                 this.arrPipes.add(new Pipe(this.arrPipes.get(i-sumpipe/2).getX(), this.arrPipes.get(i-sumpipe/2).getY()
-                + this.arrPipes.get(i-sumpipe/2).getHeight() + this.distance, 200 * Constants.SCREEN_WIDTH/1080, Constants.SCREEN_HEIGHT/2));
-                this.arrPipes.get(this.arrPipes.size()-1).setBm(BitmapFactory.decodeResource(this.getResources(), R.drawable.pipe1));
+                + this.arrPipes.get(i-sumpipe/2).getHeight() + this.distance, 600 * Constants.SCREEN_WIDTH/1080, Constants.SCREEN_HEIGHT/2));
+//                this.arrPipes.get(this.arrPipes.size()-1).setBm(BitmapFactory.decodeResource(this.getResources(), R.drawable.pipe1));
+                this.arrPipes.get(this.arrPipes.size()-1).setBm(BitmapFactory.decodeResource(this.getResources(), R.drawable.tree));
             }
         }
     }
@@ -70,6 +77,8 @@ public class GameView extends View {
         chopper.setY(Constants.SCREEN_HEIGHT/2-chopper.getHeight()/2);
         ArrayList<Bitmap> arrBms = new ArrayList<>();
         arrBms.add(BitmapFactory.decodeResource(this.getResources(), R.drawable.copter1));
+        arrBms.add(BitmapFactory.decodeResource(this.getResources(), R.drawable.copter2));
+        arrBms.add(BitmapFactory.decodeResource(this.getResources(), R.drawable.copter3));
         arrBms.add(BitmapFactory.decodeResource(this.getResources(), R.drawable.copter2));
         chopper.setArrBms(arrBms);
     }
@@ -118,6 +127,7 @@ public class GameView extends View {
             }
             chopper.draw(canvas);
         }
+        chopper.update();
         // update every 0.01 seconds
         handler.postDelayed(r, 10);
 
@@ -126,7 +136,7 @@ public class GameView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if(event.getAction() == MotionEvent.ACTION_DOWN){
-            chopper.setDrop(-3);
+            chopper.directionCheck(event.getY());
         }
         return true;
     }

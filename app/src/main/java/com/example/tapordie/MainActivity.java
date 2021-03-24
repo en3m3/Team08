@@ -2,6 +2,8 @@ package com.example.tapordie;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         rl_game_over = findViewById(R.id.rl_game_over);
         btn_start = findViewById(R.id.btn_start);
         gv = findViewById(R.id.gv);
+//        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
