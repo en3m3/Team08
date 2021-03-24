@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.util.Log;
 
 import androidx.core.app.ActivityCompat;
 
@@ -47,7 +48,7 @@ public class WeatherInfo {
             String responseData = httpsCon.getResponseMessage();
 
         }catch(Exception e) {
-            Log.e("api error","");
+            Log.e("api error","couldn't retrieve data");
         }
 
     }
