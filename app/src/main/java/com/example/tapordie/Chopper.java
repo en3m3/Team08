@@ -67,7 +67,7 @@ public class Chopper extends BaseObject {
         this.arrBms = arrBms;
         //scale bitmaps to size of Chopper
         for(int i = 0; i < arrBms.size(); i++){
-            this.arrBms.set(i, Bitmap.createScaledBitmap(this.arrBms.get(i), this.width, this.height, true));
+            this.arrBms.set(i, Bitmap.createScaledBitmap(this.arrBms.get(i), this.width*2, this.height*2, true));
         }
     }
 
@@ -121,5 +121,17 @@ public class Chopper extends BaseObject {
 
     public ChopperState getState() {
        return this.state;
+    }
+
+    public void directionCheck(float y) {
+        this.moveTo = (int)y;
+        if(y > this.y) {
+            this.state = ChopperState.MOVINGUP;
+        }
+        else if(y < this.y) {
+            this.state = ChopperState.MOVINGDOWN;
+        } else {
+            this.state = ChopperState.NOTMOVING;
+        }
     }
 }
