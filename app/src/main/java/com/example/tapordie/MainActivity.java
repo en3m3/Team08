@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-    public static TextView txt_score, txt_best_score, txt_score_over;
+    public static TextView txt_score, txt_best_score, txt_score_over, txt_welcome;
     public static RelativeLayout rl_game_over;
     public static Button btn_start;
     private GameView gv;
@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         txt_best_score = findViewById(R.id.txt_best_score);
         txt_score_over = findViewById(R.id.txt_score_over);
         rl_game_over = findViewById(R.id.rl_game_over);
+        txt_welcome = findViewById (R.id.txt_welcome);
         btn_start = findViewById(R.id.btn_start);
         gv = findViewById(R.id.gv);
 //        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
                 gv.setStart(true);
                 txt_score.setVisibility(View.VISIBLE);
                 btn_start.setVisibility(View.INVISIBLE);
+                txt_welcome.setVisibility(View.INVISIBLE);
             }
         });
         rl_game_over.setOnClickListener(new View.OnClickListener() {
