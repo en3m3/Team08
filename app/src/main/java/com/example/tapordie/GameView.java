@@ -25,6 +25,8 @@ public class GameView extends View {
     private boolean start;
     private WeatherInfo weather;
     private Context context;
+    private boolean pause;
+
 
     public GameView (Context context, @Nullable AttributeSet attrs){
         super(context, attrs);
@@ -154,5 +156,9 @@ public class GameView extends View {
         score = 0;
         initPipe();
         initChopper();
+    }
+
+    public void pauseGame() {
+
     }
 }

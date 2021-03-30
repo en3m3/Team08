@@ -2,6 +2,7 @@ package com.example.tapordie;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -15,8 +16,10 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
     public static TextView txt_score, txt_best_score, txt_score_over, txt_welcome;
     public static RelativeLayout rl_game_over;
-    public static Button btn_start;
+    public static Button btn_start, btn_pause, btn_play;
     private GameView gv;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
         rl_game_over = findViewById(R.id.rl_game_over);
         txt_welcome = findViewById (R.id.txt_welcome);
         btn_start = findViewById(R.id.btn_start);
+       // btn_play = findViewById(R.id.btn_play);
+       //btn_pause = findViewById(R.id.btn_pause);
+        boolean pause = false;
         gv = findViewById(R.id.gv);
 //        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         btn_start.setOnClickListener(new View.OnClickListener() {
@@ -53,6 +59,23 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+      /*  btn_pause.setOnClickListener (new View.OnClickListener () {
+            @Override
+            public void onClick(View v) {
+
+               btn_play.setVisibility(View.VISIBLE);
+            }
+        });
+
+       /* btn_play.setOnClickListener (new View.OnClickListener () {
+
+            public void onClick(View v) {
+              gv.setStart (true);
+                btn_play.setVisibility (View.INVISIBLE);
+                //gv.reset ();
+            }
+        }); */
 
     }
 }
