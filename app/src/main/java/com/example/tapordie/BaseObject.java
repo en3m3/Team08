@@ -1,24 +1,28 @@
 package com.example.tapordie;
 
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Rect;
+
+import java.util.Random;
 
 public class BaseObject {
     protected float x, y;
     protected int width, height;
     protected Bitmap bm;
     protected Rect rect;
-
-
-    public BaseObject(){
-
-    }
+    public Boolean active;
 
     public BaseObject(float x, float y, int width, int height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        active = false;
+    }
+
+    public BaseObject() {
+
     }
 
     public float getX() {
@@ -63,6 +67,34 @@ public class BaseObject {
 
     public Rect getRect() {
         return new Rect((int)this.x, (int)this.y, (int)this.x + this.width, (int)this.y + this.height);
+    }
+
+    public void reset(){
+        this.setX(Constants.SCREEN_WIDTH - this.width);
+        this.setY(Constants.SCREEN_HEIGHT - this.height);
+        this.setActive(false);
+    }
+    void activate(){
+        setActive(true);
+    }
+
+    public void initialize(){
+
+    }
+
+    public void draw(Canvas canvas){};
+
+    public void randomY() {
+        Random r = new Random();
+        this.y = r.nextInt((this.height/4) + 1) - this.height/4;
+    }
+
+    public boolean isActive(){
+        return active;
+    }
+
+    public void setActive(boolean activate) {
+        this.active = activate;
     }
 
     public void setRect(Rect rect) {

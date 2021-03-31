@@ -8,35 +8,51 @@ import android.graphics.Canvas;
 import android.location.LocationManager;
 import android.os.Handler;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.ArrayList;
+import java.util.Random;
+
+import static java.lang.Math.*;
 
 public class GameView extends View {
     private Chopper chopper;
     private Handler handler;
     private Runnable r;
-    private  ArrayList<Pipe> arrPipes;
+    private ArrayList<BaseObject> arrObstacles;
+    private ArrayList<BackgroundObject> bgObjects;
     private int sumpipe, distance;
     private int score, bestscore = 0;
     private boolean start;
     private WeatherInfo weather;
     private Context context;
 
+    public ArrayList<Bitmap> copterOne;
+
     public GameView (Context context, @Nullable AttributeSet attrs){
         super(context, attrs);
         this.context = context;
+
+        copterOne = new ArrayList<Bitmap>();
+        copterOne.add(BitmapFactory.decodeResource(this.getResources(), R.drawable.copter1));
+        copterOne.add(BitmapFactory.decodeResource(this.getResources(), R.drawable.copter2));
+        copterOne.add(BitmapFactory.decodeResource(this.getResources(), R.drawable.copter3));
+        copterOne.add(BitmapFactory.decodeResource(this.getResources(), R.drawable.copter2));
+
+
         SharedPreferences sp = context.getSharedPreferences("gamesetting", context.MODE_PRIVATE);
         if(sp != null) {
             bestscore = sp.getInt("bestscore", 0);
         }
         start = false;
         score = 0;
-        initChopper();
-        initPipe();
+        init();
         handler = new Handler();
         r = new Runnable() {
             @Override
@@ -44,51 +60,62 @@ public class GameView extends View {
                 invalidate();
             }
         };
+        WeatherInfo weather = new WeatherInfo(context);
+        weather.run();
 
-        weather = new WeatherInfo(context);
     }
 
-    private void initPipe() {
-        sumpipe = 6;
-//        sumpipe = 0;
-        distance = 350 *Constants.SCREEN_HEIGHT/1920;
-        arrPipes = new ArrayList<>();
-        for (int i = 0; i < sumpipe; i++) {
-            if(i < sumpipe/2) {
-                this.arrPipes.add(new Pipe(Constants.SCREEN_WIDTH+i*((Constants.SCREEN_WIDTH+600*Constants.SCREEN_WIDTH/1080)/(sumpipe/2)),
-                        0, 600 * Constants.SCREEN_WIDTH/1080, Constants.SCREEN_HEIGHT/2));
-//                this.arrPipes.get(this.arrPipes.size() -1).setBm(BitmapFactory.decodeResource(this.getResources(), R.drawable.pipe2));
-                this.arrPipes.get(this.arrPipes.size() -1).setBm(BitmapFactory.decodeResource(this.getResources(), R.drawable.balloon));
-                this.arrPipes.get(this.arrPipes.size()-1).randomY();
-            } else {
-                this.arrPipes.add(new Pipe(this.arrPipes.get(i-sumpipe/2).getX(), this.arrPipes.get(i-sumpipe/2).getY()
-                + this.arrPipes.get(i-sumpipe/2).getHeight() + this.distance, 600 * Constants.SCREEN_WIDTH/1080, Constants.SCREEN_HEIGHT/2));
-//                this.arrPipes.get(this.arrPipes.size()-1).setBm(BitmapFactory.decodeResource(this.getResources(), R.drawable.pipe1));
-                this.arrPipes.get(this.arrPipes.size()-1).setBm(BitmapFactory.decodeResource(this.getResources(), R.drawable.tree));
-            }
-        }
+    private void init() {
+        initClouds();
+        initChopper();
+        initObstacles();
+    }
+
+    private void initClouds(){
+        bgObjects = new ArrayList<>();
+        this.bgObjects.add(new Cloud(Constants.SCREEN_WIDTH, 0, 600 * Constants.SCREEN_WIDTH/1080, Constants.SCREEN_HEIGHT/2));
+        this.bgObjects.get(this.bgObjects.size()-1).setBm(BitmapFactory.decodeResource(this.getResources(), R.drawable.cloud));
+
+    }
+
+    private void initObstacles() {
+        arrObstacles = new ArrayList<>();
+
+        this.arrObstacles.add(new Tree(Constants.SCREEN_WIDTH,
+                0, 600 * Constants.SCREEN_WIDTH/1080, Constants.SCREEN_HEIGHT/2));
+        this.arrObstacles.get(this.arrObstacles.size()-1).setBm(BitmapFactory.decodeResource(this.getResources(), R.drawable.tree));
+        this.arrObstacles.add(new Tree(Constants.SCREEN_WIDTH,
+                0, 600 * Constants.SCREEN_WIDTH/1080, Constants.SCREEN_HEIGHT/2));
+        this.arrObstacles.get(this.arrObstacles.size()-1).setBm(BitmapFactory.decodeResource(this.getResources(), R.drawable.tree));
+        this.arrObstacles.add(new Balloon(Constants.SCREEN_WIDTH,
+                0, 600 * Constants.SCREEN_WIDTH/1080, Constants.SCREEN_HEIGHT/2));
+        this.arrObstacles.get(this.arrObstacles.size() -1).setBm(BitmapFactory.decodeResource(this.getResources(), R.drawable.balloon));
+        this.arrObstacles.add(new Balloon(Constants.SCREEN_WIDTH,
+                0, 600 * Constants.SCREEN_WIDTH/1080, Constants.SCREEN_HEIGHT/2));
+        this.arrObstacles.get(this.arrObstacles.size() -1).setBm(BitmapFactory.decodeResource(this.getResources(), R.drawable.balloon));
     }
 
     private void initChopper() {
-        chopper = new Chopper();
-        chopper.setWidth(100*Constants.SCREEN_WIDTH/1000);
-        chopper.setHeight(100*Constants.SCREEN_HEIGHT/1980);
-        chopper.setX(100*Constants.SCREEN_WIDTH/1080);
-        chopper.setY(Constants.SCREEN_HEIGHT/2-chopper.getHeight()/2);
-        ArrayList<Bitmap> arrBms = new ArrayList<>();
-        arrBms.add(BitmapFactory.decodeResource(this.getResources(), R.drawable.copter1));
-        arrBms.add(BitmapFactory.decodeResource(this.getResources(), R.drawable.copter2));
-        arrBms.add(BitmapFactory.decodeResource(this.getResources(), R.drawable.copter3));
-        arrBms.add(BitmapFactory.decodeResource(this.getResources(), R.drawable.copter2));
-        chopper.setArrBms(arrBms);
+        chopper = new Chopper(copterOne);
     }
 
     public void draw(Canvas canvas){
         super.draw(canvas);
         if(start) {
+            for (BackgroundObject obj: bgObjects ) {
+                obj.draw(canvas);
+            }
+
             chopper.draw(canvas);
-            for(int i = 0; i < sumpipe; i++) {
-                if(chopper.getRect().intersect(arrPipes.get(i).getRect()) || chopper.getY()-chopper.getHeight()<0 || chopper.getY() > Constants.SCREEN_HEIGHT){
+            if((random() * 10) < 5) {
+                int i = (int) Math.floor(random() * arrObstacles.size());
+                arrObstacles.get(i).activate();
+                Log.i("pause","paused");
+            }
+
+
+            for(int i = 0; i < arrObstacles.size()-1; i++) {
+                if(chopper.getRect().intersect(arrObstacles.get(i).getRect()) || chopper.getY()-chopper.getHeight()<0 || chopper.getY() > Constants.SCREEN_HEIGHT){
                     Pipe.speed = 0;
                     MainActivity.txt_score_over.setText(MainActivity.txt_score.getText());
                     MainActivity.txt_best_score.setText("best: "+ bestscore);
@@ -96,8 +123,8 @@ public class GameView extends View {
                     MainActivity.rl_game_over.setVisibility(VISIBLE);
 
                 }
-                if(this.chopper.getX()+this.chopper.getWidth()>arrPipes.get(i).getX()+arrPipes.get(i).getWidth()/2
-                        && this.chopper.getX()+this.chopper.getWidth()<=arrPipes.get(i).getX()+arrPipes.get(i).getWidth()/2 + Pipe.speed
+                if(this.chopper.getX()+this.chopper.getWidth()>arrObstacles.get(i).getX()+arrObstacles.get(i).getWidth()/2
+                        && this.chopper.getX()+this.chopper.getWidth()<=arrObstacles.get(i).getX()+arrObstacles.get(i).getWidth()/2 + Pipe.speed
                         && i<sumpipe/2){
                     score++;
                     if(score > bestscore) {
@@ -110,16 +137,13 @@ public class GameView extends View {
                     MainActivity.txt_score.setText(""+score);
                 }
                 //reset water pipes position if out of screen.
-                if(this.arrPipes.get(i).getX() < -arrPipes.get(i).getWidth()){
-                    this.arrPipes.get(i).setX(Constants.SCREEN_WIDTH);
-                    if(i < sumpipe/2) {
-                        arrPipes.get(i).randomY();
-                    } else {
-                        arrPipes.get(i).setY(this.arrPipes.get(i - sumpipe/2).getY()
-                                +this.arrPipes.get(i-sumpipe/2).getHeight() + this.distance);
-                    }
+                if(this.arrObstacles.get(i).getX() < -arrObstacles.get(i).getWidth()){
+                    this.arrObstacles.get(i).reset();
+                    double rand = random();
+                    this.arrObstacles.get(i).setX(Constants.SCREEN_WIDTH + ((float)rand * 2000));
+                    this.setActivated(false);
                 }
-                this.arrPipes.get(i).draw(canvas);
+                this.arrObstacles.get(i).draw(canvas);
             }
         } else {
             if(chopper.getY()>Constants.SCREEN_HEIGHT/2){
@@ -152,7 +176,6 @@ public class GameView extends View {
     public void reset() {
         MainActivity.txt_score.setText("0");
         score = 0;
-        initPipe();
-        initChopper();
+        init();
     }
 }
