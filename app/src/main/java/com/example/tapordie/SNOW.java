@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.github.matteobattilana.weather.PrecipType;
 import com.github.matteobattilana.weather.WeatherView;
 
-public class Snow extends AppCompatActivity {
+public class SNOW extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
