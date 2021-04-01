@@ -45,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         btn_pause = findViewById(R.id.btn_pause);
 
         gv = findViewById(R.id.gv);
+        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

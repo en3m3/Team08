@@ -1,6 +1,7 @@
 package com.example.tapordie;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.util.Log;
@@ -15,14 +16,26 @@ public class Chopper extends BaseObject {
     private int yMove = 0;
     private double speed = 5;
     private int moveTo = 0;
+    int copter = 1; //number of which helicopter is being used
     private ChopperState state = ChopperState.NOTMOVING;
 
-    public Chopper(){
+    public Chopper(ArrayList<Bitmap> copterSelected){
+        super();
         this.count = 0;
         this.vFlap =0;
         this.idCurrentBitmap = 0;
         this.drop = 0;
+        this.copter = 1;
+        setWidth(100*Constants.SCREEN_WIDTH/1000);
+        setHeight(100*Constants.SCREEN_HEIGHT/1980);
+        setX(100*Constants.SCREEN_WIDTH/1080);
+        setY(Constants.SCREEN_HEIGHT/2-getHeight()/2);
+        arrBms = new ArrayList<>();
+
+        setArrBms(copterSelected);
+
     }
+
     public void draw(Canvas canvas) {
         canvas.drawBitmap(this.getBm(), this.x, this.y, null);
     }
@@ -40,7 +53,7 @@ public class Chopper extends BaseObject {
             default:
                 break;
         }
-        Log.d("state", this.state.toString());
+//        Log.d("state", this.state.toString());
     }
 
     private void drop() {
@@ -72,9 +85,15 @@ public class Chopper extends BaseObject {
     }
 
     @Override
+    public void reset() {
+        super.reset();
+        this.y = Constants.SCREEN_HEIGHT/2 - this.height/2;
+    }
+
+    @Override
     public Bitmap getBm() {
         count++;
-        if(this.count == this.vFlap){
+//        if(this.count == this.vFlap){
             for(int i = 0; i <arrBms.size(); i++){
                 if(i == arrBms.size()-1) {
                     this.idCurrentBitmap = 0;
@@ -85,7 +104,7 @@ public class Chopper extends BaseObject {
                 }
             }
             count =0;
-        }
+//        }
         Matrix matrix = new Matrix();
         if(state == ChopperState.MOVINGDOWN) {
             if (this.y - this.moveTo < 70) {
