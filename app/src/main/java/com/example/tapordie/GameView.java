@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.location.LocationManager;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -22,7 +21,7 @@ import java.util.Random;
 import static java.lang.Math.*;
 
 public class GameView extends View {
-    private Chopper chopper;
+    private Bird bird;
     private Handler handler;
     private Runnable r;
     private ArrayList<BaseObject> arrObstacles;
@@ -30,9 +29,7 @@ public class GameView extends View {
     private int sumpipe, distance;
     private int score, bestscore = 0;
     private boolean start;
-    private WeatherInfo weather;
     private Context context;
-
     public ArrayList<Bitmap> copterOne;
 
     public GameView (Context context, @Nullable AttributeSet attrs){
@@ -105,7 +102,6 @@ public class GameView extends View {
                 0, 600 * Constants.SCREEN_WIDTH/1080, Constants.SCREEN_HEIGHT/2));
         this.arrObstacles.get(this.arrObstacles.size() -1).setBm(BitmapFactory.decodeResource(this.getResources(), R.drawable.balloon));
     }
-
     private void initChopper() {
         chopper = new Chopper(copterOne);
     }
@@ -157,12 +153,11 @@ public class GameView extends View {
                 this.arrObstacles.get(i).draw(canvas);
             }
         } else {
-            if(chopper.getY()>Constants.SCREEN_HEIGHT/2){
-                chopper.setDrop(-15*Constants.SCREEN_HEIGHT/1920);
+            if(bird.getY()>Constants.SCREEN_HEIGHT/2){
+                bird.setDrop(-15*Constants.SCREEN_HEIGHT/1920);
             }
-            chopper.draw(canvas);
+            bird.draw(canvas);
         }
-        chopper.update();
         // update every 0.01 seconds
         handler.postDelayed(r, 10);
 
@@ -171,7 +166,7 @@ public class GameView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if(event.getAction() == MotionEvent.ACTION_DOWN){
-            chopper.directionCheck(event.getY());
+            bird.setDrop(-15);
         }
         return true;
     }
