@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -21,10 +22,11 @@ public class MainActivity extends AppCompatActivity {
     ImageView btn_pause, btn_play;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         DisplayMetrics dm = new DisplayMetrics();
         RAIN rain = new RAIN();
         SNOW snow = new SNOW();
@@ -41,9 +43,7 @@ public class MainActivity extends AppCompatActivity {
         btn_play = findViewById(R.id.btn_play);
         btn_pause = findViewById(R.id.btn_pause);
 
-
         gv = findViewById(R.id.gv);
-//        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-       btn_pause.setOnClickListener (new View.OnClickListener () {
+        btn_pause.setOnClickListener (new View.OnClickListener () {
             @Override
             public void onClick(View v) {
                 gv.setStart (false);
@@ -76,10 +76,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-       btn_play.setOnClickListener (new View.OnClickListener () {
+        btn_play.setOnClickListener (new View.OnClickListener () {
 
             public void onClick(View v) {
-              gv.setStart (true);
+                gv.setStart (true);
                 btn_play.setVisibility (View.INVISIBLE);
                 btn_pause.setVisibility (View.VISIBLE);
 

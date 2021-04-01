@@ -5,30 +5,24 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.location.LocationManager;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
 public class GameView extends View {
-    private Chopper chopper;
+    private Bird bird;
     private Handler handler;
     private Runnable r;
     private  ArrayList<Pipe> arrPipes;
     private int sumpipe, distance;
     private int score, bestscore = 0;
     private boolean start;
-    private WeatherInfo weather;
     private Context context;
-    private boolean pause;
-
-
     public GameView (Context context, @Nullable AttributeSet attrs){
         super(context, attrs);
         this.context = context;
@@ -38,7 +32,7 @@ public class GameView extends View {
         }
         start = false;
         score = 0;
-        initChopper();
+        initBird();
         initPipe();
         handler = new Handler();
         r = new Runnable() {
@@ -47,51 +41,44 @@ public class GameView extends View {
                 invalidate();
             }
         };
-
-//        weather = new WeatherInfo(context);
     }
 
     private void initPipe() {
         sumpipe = 6;
-//        sumpipe = 0;
-        distance = 350 *Constants.SCREEN_HEIGHT/1920;
+        distance = 300 *Constants.SCREEN_HEIGHT/1920;
         arrPipes = new ArrayList<>();
         for (int i = 0; i < sumpipe; i++) {
             if(i < sumpipe/2) {
-                this.arrPipes.add(new Pipe(Constants.SCREEN_WIDTH+i*((Constants.SCREEN_WIDTH+600*Constants.SCREEN_WIDTH/1080)/(sumpipe/2)),
-                        0, 600 * Constants.SCREEN_WIDTH/1080, Constants.SCREEN_HEIGHT/2));
-//                this.arrPipes.get(this.arrPipes.size() -1).setBm(BitmapFactory.decodeResource(this.getResources(), R.drawable.pipe2));
-                this.arrPipes.get(this.arrPipes.size() -1).setBm(BitmapFactory.decodeResource(this.getResources(), R.drawable.balloon));
+                this.arrPipes.add(new Pipe(Constants.SCREEN_WIDTH+i*((Constants.SCREEN_WIDTH+200*Constants.SCREEN_WIDTH/1080)/(sumpipe/2)),
+                        0, 200 * Constants.SCREEN_WIDTH/1080, Constants.SCREEN_HEIGHT/2));
+                this.arrPipes.get(this.arrPipes.size() -1).setBm(BitmapFactory.decodeResource(this.getResources(), R.drawable.pipe2));
                 this.arrPipes.get(this.arrPipes.size()-1).randomY();
             } else {
                 this.arrPipes.add(new Pipe(this.arrPipes.get(i-sumpipe/2).getX(), this.arrPipes.get(i-sumpipe/2).getY()
-                + this.arrPipes.get(i-sumpipe/2).getHeight() + this.distance, 600 * Constants.SCREEN_WIDTH/1080, Constants.SCREEN_HEIGHT/2));
-//                this.arrPipes.get(this.arrPipes.size()-1).setBm(BitmapFactory.decodeResource(this.getResources(), R.drawable.pipe1));
-                this.arrPipes.get(this.arrPipes.size()-1).setBm(BitmapFactory.decodeResource(this.getResources(), R.drawable.tree));
+                + this.arrPipes.get(i-sumpipe/2).getHeight() + this.distance, 200 * Constants.SCREEN_WIDTH/1080, Constants.SCREEN_HEIGHT/2));
+                this.arrPipes.get(this.arrPipes.size()-1).setBm(BitmapFactory.decodeResource(this.getResources(), R.drawable.pipe1));
             }
         }
     }
 
-    private void initChopper() {
-        chopper = new Chopper();
-        chopper.setWidth(100*Constants.SCREEN_WIDTH/1000);
-        chopper.setHeight(100*Constants.SCREEN_HEIGHT/1980);
-        chopper.setX(100*Constants.SCREEN_WIDTH/1080);
-        chopper.setY(Constants.SCREEN_HEIGHT/2-chopper.getHeight()/2);
+    private void initBird() {
+        bird = new Bird();
+        bird.setWidth(100*Constants.SCREEN_WIDTH/1000);
+        bird.setHeight(100*Constants.SCREEN_HEIGHT/1980);
+        bird.setX(100*Constants.SCREEN_WIDTH/1080);
+        bird.setY(Constants.SCREEN_HEIGHT/2-bird.getHeight()/2);
         ArrayList<Bitmap> arrBms = new ArrayList<>();
-        arrBms.add(BitmapFactory.decodeResource(this.getResources(), R.drawable.copter1));
-        arrBms.add(BitmapFactory.decodeResource(this.getResources(), R.drawable.copter2));
-        arrBms.add(BitmapFactory.decodeResource(this.getResources(), R.drawable.copter3));
-        arrBms.add(BitmapFactory.decodeResource(this.getResources(), R.drawable.copter2));
-        chopper.setArrBms(arrBms);
+        arrBms.add(BitmapFactory.decodeResource(this.getResources(), R.drawable.bird1));
+        arrBms.add(BitmapFactory.decodeResource(this.getResources(), R.drawable.bird2));
+        bird.setArrBms(arrBms);
     }
 
     public void draw(Canvas canvas){
         super.draw(canvas);
         if(start) {
-            chopper.draw(canvas);
+            bird.draw(canvas);
             for(int i = 0; i < sumpipe; i++) {
-                if(chopper.getRect().intersect(arrPipes.get(i).getRect()) || chopper.getY()-chopper.getHeight()<0 || chopper.getY() > Constants.SCREEN_HEIGHT){
+                if(bird.getRect().intersect(arrPipes.get(i).getRect()) || bird.getY()-bird.getHeight()<0 || bird.getY() > Constants.SCREEN_HEIGHT){
                     Pipe.speed = 0;
                     MainActivity.txt_score_over.setText(MainActivity.txt_score.getText());
                     MainActivity.txt_best_score.setText("best: "+ bestscore);
@@ -99,8 +86,8 @@ public class GameView extends View {
                     MainActivity.rl_game_over.setVisibility(VISIBLE);
 
                 }
-                if(this.chopper.getX()+this.chopper.getWidth()>arrPipes.get(i).getX()+arrPipes.get(i).getWidth()/2
-                        && this.chopper.getX()+this.chopper.getWidth()<=arrPipes.get(i).getX()+arrPipes.get(i).getWidth()/2 + Pipe.speed
+                if(this.bird.getX()+this.bird.getWidth()>arrPipes.get(i).getX()+arrPipes.get(i).getWidth()/2
+                        && this.bird.getX()+this.bird.getWidth()<=arrPipes.get(i).getX()+arrPipes.get(i).getWidth()/2 + Pipe.speed
                         && i<sumpipe/2){
                     score++;
                     if(score > bestscore) {
@@ -125,12 +112,11 @@ public class GameView extends View {
                 this.arrPipes.get(i).draw(canvas);
             }
         } else {
-            if(chopper.getY()>Constants.SCREEN_HEIGHT/2){
-                chopper.setDrop(-15*Constants.SCREEN_HEIGHT/1920);
+            if(bird.getY()>Constants.SCREEN_HEIGHT/2){
+                bird.setDrop(-15*Constants.SCREEN_HEIGHT/1920);
             }
-            chopper.draw(canvas);
+            bird.draw(canvas);
         }
-        chopper.update();
         // update every 0.01 seconds
         handler.postDelayed(r, 10);
 
@@ -139,7 +125,7 @@ public class GameView extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if(event.getAction() == MotionEvent.ACTION_DOWN){
-            chopper.directionCheck(event.getY());
+            bird.setDrop(-15);
         }
         return true;
     }
@@ -156,10 +142,6 @@ public class GameView extends View {
         MainActivity.txt_score.setText("0");
         score = 0;
         initPipe();
-        initChopper();
-    }
-
-    public void pauseGame() {
-
+        initBird();
     }
 }

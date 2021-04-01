@@ -13,13 +13,12 @@ public class Pipe extends BaseObject {
     public void draw(Canvas canvas) {
         canvas.drawBitmap(this.bm, this.x, this.y, null);
         this.x -=speed;
-//        speed = 10*Constants.SCREEN_WIDTH/1080;
-        speed = 20*Constants.SCREEN_WIDTH/1080;
+        speed = 10*Constants.SCREEN_WIDTH/1080;
     }
 
     public void randomY() {
         Random r = new Random();
-        this.y = r.nextInt((this.height/4) + 1) - this.height/4;
+        this.y = r.nextInt((0+this.height/4) + 1) - this.height/4;
     }
 
     @Override
