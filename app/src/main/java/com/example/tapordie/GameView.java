@@ -60,8 +60,10 @@ public class GameView extends View {
                 invalidate();
             }
         };
-        WeatherInfo weather = new WeatherInfo(context);
-        weather.run();
+        weather = new WeatherInfo(context);
+        Thread weatherThread = new Thread(weather);
+        weatherThread.start();
+
 
     }
 
@@ -69,6 +71,15 @@ public class GameView extends View {
         initClouds();
         initChopper();
         initObstacles();
+        for (BackgroundObject bgObj:bgObjects) {
+            bgObj.reset();
+        }
+        for (BaseObject baseObj:arrObstacles) {
+            baseObj.reset();
+        }
+        chopper.reset();
+        Log.i("weather available", "check value");
+
     }
 
     private void initClouds(){
@@ -176,6 +187,6 @@ public class GameView extends View {
     public void reset() {
         MainActivity.txt_score.setText("0");
         score = 0;
-        init();
+        Log.e("pause"," ");
     }
 }

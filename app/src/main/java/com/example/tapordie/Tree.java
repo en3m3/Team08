@@ -23,14 +23,10 @@ public class Tree extends BaseObject {
     @Override
     public void reset() {
         super.reset();
-
+        this.y = 0 - this.height + ((float)Math.random() * 100);
     }
 
-    public void randomY() {
-//        Random r = new Random();
-//        this.y = r.nextInt((this.height/4) + 1) - this.height/4;
-        this.y = 0 - this.height;
-    }
+
 
     @Override
     public void setBm(Bitmap bm) {
