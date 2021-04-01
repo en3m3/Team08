@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.support.v4.os.IResultReceiver;
 import android.util.Log;
 import android.view.View;
 
@@ -18,13 +19,17 @@ import androidx.core.app.ActivityCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -35,17 +40,20 @@ import static androidx.core.content.ContextCompat.getSystemService;
 public class WeatherInfo implements Runnable {
     static String apikey = "e578e419099ed577e63332bc72fa801d";
     private WeatherType description;
+    private String strWeatherDesc;
     private TimeOfDay time;
     private double lat;
     private double lon;
     private URL httpURL;
     Context context;
     Location location;
+    public JSONObject responseData;
+    InputStream response;
 
     public WeatherInfo(){}
 
     public WeatherInfo(Context ctx) {
-        double DEFAULT_LAT = 111.7924;
+        double DEFAULT_LAT = 11.7924;
         double DEFAULT_LON = 43.8231;
         this.context = ctx;
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -79,11 +87,65 @@ public class WeatherInfo implements Runnable {
         }
     }
 
+    public WeatherType getWeatherDescription () {
+        WeatherType currentWeather;
+        switch(this.strWeatherDesc) {
+            case "clear sky":
+            case "sunny":
+                currentWeather = WeatherType.SUNNY;
+                break;
+            case "cloudy":
+            case "partly cloudy":
+            case "mostly cloudy":
+                currentWeather = WeatherType.CLOUDY;
+                break;
+            case "snow":
+            case "light snow":
+            case "heavy snow":
+                currentWeather = WeatherType.SNOW;
+                break;
+            case "rain":
+            case "light rain":
+            case "heavy rain":
+                currentWeather = WeatherType.RAIN;
+                break;
+            default:
+                Integer rnd = Math.round((float)Math.random()*3);
+                switch (rnd) {
+                    case 0:
+                    currentWeather = WeatherType.SUNNY;
+                    case 1:
+                    currentWeather = WeatherType.CLOUDY;
+                    case 2:
+                    currentWeather = WeatherType.SNOW;
+                    case 3:
+                    currentWeather = WeatherType.RAIN;
+                    default:
+                        currentWeather = WeatherType.RAIN;
+                        break;
+                }
+        }
 
-    @Override
+        return currentWeather;
+    }
+
+    public void processWeatherData(InputStream response) {
+        try {
+            JSONArray weatherList = responseData.getJSONArray("weather");
+            for (int i = 0; i < weatherList.length(); i++) {
+                JSONObject each = (JSONObject) weatherList.get(i);
+                this.strWeatherDesc = each.getString("description");
+            }
+
+             Log.i("break", "1");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+        @Override
     public void run() {
-
-
         try {
 
 //            URLConnection connection = new URL(c.apiCall.getApiCall()).openConnection();
@@ -95,17 +157,19 @@ public class WeatherInfo implements Runnable {
 //                List<Gson> g = new ArrayList<>();
 //                c.weather = gson.fromJson(responseBody,CityWeather.class); /* converts the JSON into a city's weather object */
 
-            Log.i("api call","preparing");
-            URL httpsURL = new URL("https://api.openweathermap.org/data/2.5/weather?lat=111.7924&lon=43.8231&appid=e578e419099ed577e63332bc72fa801d");
+//            Log.i("api call","preparing");
+
+
+            URL httpsURL = new URL("https://api.openweathermap.org/data/2.5/weather?lat=11&lon=43&appid=e578e419099ed577e63332bc72fa801d");
 
 //            httpURL = new URL("https://api.openweathermap.org/data/2.5/weather?lat="+location.getLatitude()+"&lon="+location.getLongitude()+"&appid="+apikey);
             Log.i("api call","opening connection");
             HttpsURLConnection httpsCon = (HttpsURLConnection) httpsURL.openConnection();
-            InputStream response = httpsCon.getInputStream();
+            response = httpsCon.getInputStream();
             Scanner scanner = new Scanner(response);
             String responseBody = scanner.useDelimiter("\\A").next();
-            JSONObject responseData = new JSONObject(httpsCon.getResponseMessage());
-
+            responseData = new JSONObject(responseBody);
+            processWeatherData(response);
 //            httpsCon.setRequestMethod("GET");
 //            httpsCon.setRequestProperty("Content-Type", "application/json");
 //            httpsCon.setConnectTimeout(7500);
@@ -117,6 +181,7 @@ public class WeatherInfo implements Runnable {
         }catch(Exception e) {
             Log.e("api error","couldn't retrieve data");
         }
+
     }
 }
 /*.

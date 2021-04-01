@@ -53,7 +53,7 @@ public class Chopper extends BaseObject {
             default:
                 break;
         }
-        Log.d("state", this.state.toString());
+//        Log.d("state", this.state.toString());
     }
 
     private void drop() {
@@ -82,6 +82,12 @@ public class Chopper extends BaseObject {
         for(int i = 0; i < arrBms.size(); i++){
             this.arrBms.set(i, Bitmap.createScaledBitmap(this.arrBms.get(i), this.width*2, this.height*2, true));
         }
+    }
+
+    @Override
+    public void reset() {
+        super.reset();
+        this.y = Constants.SCREEN_HEIGHT/2 - this.height/2;
     }
 
     @Override

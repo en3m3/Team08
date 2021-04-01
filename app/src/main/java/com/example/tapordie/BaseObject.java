@@ -69,25 +69,16 @@ public class BaseObject {
         return new Rect((int)this.x, (int)this.y, (int)this.x + this.width, (int)this.y + this.height);
     }
 
-    public void reset(){
-        this.setX(Constants.SCREEN_WIDTH - this.width);
-        this.setY(Constants.SCREEN_HEIGHT - this.height);
-        this.setActive(false);
-    }
+    public void reset(){}
     void activate(){
         setActive(true);
     }
 
     public void initialize(){
-
+        this.reset();
     }
 
     public void draw(Canvas canvas){};
-
-    public void randomY() {
-        Random r = new Random();
-        this.y = r.nextInt((this.height/4) + 1) - this.height/4;
-    }
 
     public boolean isActive(){
         return active;

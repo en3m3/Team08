@@ -18,7 +18,7 @@ public class Balloon extends BaseObject {
             canvas.drawBitmap(this.bm, this.x, this.y, null);
             this.x -= speed;
             speed = 20 * Constants.SCREEN_WIDTH / 1080;
-            this.y += 1;
+            this.y += .5;
         }
     }
 
