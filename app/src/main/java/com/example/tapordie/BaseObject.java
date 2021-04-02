@@ -69,7 +69,9 @@ public class BaseObject {
         return new Rect((int)this.x, (int)this.y, (int)this.x + this.width, (int)this.y + this.height);
     }
 
-    public void reset(){}
+    public void reset(){
+        this.active = false;
+    }
     void activate(){
         setActive(true);
     }

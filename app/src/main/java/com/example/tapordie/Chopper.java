@@ -30,10 +30,10 @@ public class Chopper extends BaseObject {
         setHeight(100*Constants.SCREEN_HEIGHT/1980);
         setX(100*Constants.SCREEN_WIDTH/1080);
         setY(Constants.SCREEN_HEIGHT/2-getHeight()/2);
-        arrBms = new ArrayList<>();
+//        arrBms = new ArrayList<>();
 
         setArrBms(copterSelected);
-
+        this.reset();
     }
 
     public void draw(Canvas canvas) {
@@ -54,22 +54,6 @@ public class Chopper extends BaseObject {
                 break;
         }
 //        Log.d("state", this.state.toString());
-    }
-
-    private void drop() {
-//        this.drop += 0.6;
-//        this.drop += (monkeyNums)*0.3;
-//        this.drop += 0.1;
-//        this.drop = 0;
-//        this.y += this.drop;
-    }
-
-    public float getDrop() {
-        return drop;
-    }
-
-    public void setDrop(float drop) {
-        this.drop = drop;
     }
 
     public ArrayList<Bitmap> getArrBms() {

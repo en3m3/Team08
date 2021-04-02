@@ -1,11 +1,20 @@
 package com.example.tapordie;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
+import java.util.ArrayList;
+
 public class Cloud extends BackgroundObject{
-    public Cloud(int x, int y, int width, int height) {
+    public Cloud(ArrayList<Bitmap> cloudBitmap) {
         super();
+        this.width = cloudBitmap.get(0).getWidth();
+        this.height = cloudBitmap.get(0).getHeight();
+        setBm(cloudBitmap.get(0));
+        this.reset();
     }
+
+
 
     public void draw(Canvas canvas) {
         canvas.drawBitmap(this.getBm(), this.x, this.y, null);

@@ -3,13 +3,18 @@ package com.example.tapordie;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Tree extends BaseObject {
     public static int speed;
 
-    public Tree(float x, float y, int width, int height) {
-        super(x, y, width, height);
+    public Tree(ArrayList<Bitmap> treeBitmap){
+        this.width = treeBitmap.get(0).getWidth();
+        this.height = treeBitmap.get(0).getHeight();
+        setBm(treeBitmap.get(0));
+
+        this.reset();
     }
     public void draw(Canvas canvas) {
         if(active) {
@@ -23,7 +28,7 @@ public class Tree extends BaseObject {
     @Override
     public void reset() {
         super.reset();
-        this.y = 0 - this.height + ((float)Math.random() * 100);
+        this.y = Constants.SCREEN_HEIGHT - ((float)Math.random() * 300);
     }
 
 
