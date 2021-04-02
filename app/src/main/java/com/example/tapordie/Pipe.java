@@ -15,12 +15,9 @@ public class Pipe extends BaseObject {
         if(active) {
             canvas.drawBitmap(this.bm, this.x, this.y, null);
             this.x -= speed;
-//        speed = 10*Constants.SCREEN_WIDTH/1080;
             speed = 20 * Constants.SCREEN_WIDTH / 1080;
         }
     }
-
-
 
     @Override
     public void setBm(Bitmap bm) {
