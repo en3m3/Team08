@@ -6,6 +6,9 @@ import android.graphics.Rect;
 
 import java.util.Random;
 
+/**
+ * Base object for all of the objects, should not be instantiated. Probably could have been an abstract class.
+ */
 public class BaseObject {
     protected float x, y;
     protected int width, height;
@@ -66,7 +69,7 @@ public class BaseObject {
     }
 
     public Rect getRect() {
-        return new Rect((int)this.x, (int)this.y, (int)this.x + this.width, (int)this.y + this.height);
+        return new Rect((int)(this.x/1.5), (int)(this.y/1.5), (int)((this.x + this.width)/1.5), (int)((this.y + this.height)/1.5));
     }
 
     public void reset(){

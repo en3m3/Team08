@@ -2,6 +2,8 @@ package com.example.tapordie;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -22,7 +24,10 @@ public class MainActivity extends AppCompatActivity {
     ImageView btn_pause, btn_play;
 
 
-
+    /**
+     * sets up the layout of the ui items and sets up the game state
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

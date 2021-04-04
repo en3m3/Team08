@@ -7,6 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.github.matteobattilana.weather.PrecipType;
 import com.github.matteobattilana.weather.WeatherView;
 
+/**
+ * starts snow effect
+ */
 public class SNOW extends AppCompatActivity {
 
     @Override

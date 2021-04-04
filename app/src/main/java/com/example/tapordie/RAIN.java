@@ -7,6 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.github.matteobattilana.weather.PrecipType;
 import com.github.matteobattilana.weather.WeatherView;
 
+/**
+ * starts the rain effect
+ */
 public class RAIN extends AppCompatActivity {
 
     @Override

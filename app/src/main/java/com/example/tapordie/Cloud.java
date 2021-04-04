@@ -5,7 +5,11 @@ import android.graphics.Canvas;
 
 import java.util.ArrayList;
 
+/**
+ * Background cloud object. Renders in the background layer, restricted to the top half of the screen.
+ */
 public class Cloud extends BackgroundObject{
+    private int speed;
     public Cloud(ArrayList<Bitmap> cloudBitmap) {
         super();
         this.width = cloudBitmap.get(0).getWidth();
@@ -14,19 +18,21 @@ public class Cloud extends BackgroundObject{
         this.reset();
     }
 
+    /**
+     * sets random x off the screen to create variety in timing and creates a random for the y value as well
+     */
+    public void reset(){
+        this.y = (float) (Constants.SCREEN_HEIGHT/2 - Math.random()*Constants.SCREEN_HEIGHT/2);
+        this.x = (float) (Constants.SCREEN_WIDTH + Math.random()*5000);
+        this.speed = (int) ((Math.random()*4) + 1);
+    }
 
-
+    /**
+     *
+     * @param canvas
+     */
     public void draw(Canvas canvas) {
         canvas.drawBitmap(this.getBm(), this.x, this.y, null);
-        this.x -= 5;
-        if(this.x < -1000){
-            this.x = Constants.SCREEN_WIDTH;
-            int random = (int)Math.round(Math.random()*Constants.SCREEN_HEIGHT);
-            if(this.y < 1500) {
-                this.y = 1500;
-            } else if(this.y > Constants.SCREEN_HEIGHT) {
-                this.y = Constants.SCREEN_HEIGHT - 100;
-            }
-        }
+        this.x -=speed;
     }
 }

@@ -6,6 +6,9 @@ import android.graphics.Canvas;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * tree obstacle. Stays at the bottom area of the screen
+ */
 public class Tree extends BaseObject {
     public static int speed;
 
@@ -20,7 +23,6 @@ public class Tree extends BaseObject {
         if(active) {
             canvas.drawBitmap(this.bm, this.x, this.y, null);
             this.x -= speed;
-//        speed = 10*Constants.SCREEN_WIDTH/1080;
             speed = 20 * Constants.SCREEN_WIDTH / 1080;
         }
     }
@@ -28,7 +30,8 @@ public class Tree extends BaseObject {
     @Override
     public void reset() {
         super.reset();
-        this.y = Constants.SCREEN_HEIGHT - ((float)Math.random() * 300);
+        this.y = Constants.SCREEN_HEIGHT - ((float)Math.random() * 500);
+        this.x = Constants.SCREEN_WIDTH +  ((float)Math.random() * 1500);
     }
 
 
